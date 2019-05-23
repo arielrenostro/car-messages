@@ -62,6 +62,7 @@ def get_body(event):
             return json.loads(body)
         elif isinstance(body, dict):
             return body
+    return {}
 
 
 def get_decimal(body, key):
