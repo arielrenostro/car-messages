@@ -1,3 +1,4 @@
+import time
 from datetime import datetime
 
 import requests
@@ -79,4 +80,6 @@ while True:
     )
 
     print(response)
+
+    time.sleep(2)
 
