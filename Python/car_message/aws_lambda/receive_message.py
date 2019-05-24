@@ -10,13 +10,13 @@ def lambda_handler(event, context):
     body = get_body(event)
 
     data = {
-        'date': datetime.utcnow().strftime("%Y/%m/%dT%H:%M:%SZ"),
+        'date': body.get('datetime', datetime.utcnow().strftime("%Y/%m/%dT%H:%M:%SZ")),
         'car': body.get('car'),
-        'velocity': get_decimal(body, 'velocity'),
+        'speed': get_decimal(body, 'speed'),
         'rpm': get_decimal(body, 'rpm'),
-        'air_temp': get_decimal(body, 'airTemp'),
-        'oil_temp': get_decimal(body, 'oilTemp'),
-        'water_temp': get_decimal(body, 'waterTemp'),
+        'intake_temp': get_decimal(body, 'intakeTemperature'),
+        'oil_temp': get_decimal(body, 'oilTemperature'),
+        'coolant_temp': get_decimal(body, 'coolantTemperature'),
         'latitude': get_decimal(body, 'latitude'),
         'longetude': get_decimal(body, 'longetude'),
     }
