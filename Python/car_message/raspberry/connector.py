@@ -1,6 +1,6 @@
 import serial as serial
 
-from car_message.raspberry.settings import BLUETOOTH_SERIAL_DEVICE, BLUETOOTH_SERIAL_TIMEOUT
+from settings import BLUETOOTH_SERIAL_DEVICE, BLUETOOTH_SERIAL_TIMEOUT
 
 
 class Connector:

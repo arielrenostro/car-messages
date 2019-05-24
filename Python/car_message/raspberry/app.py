@@ -2,10 +2,15 @@ from datetime import datetime
 
 import requests
 
-from car_message.raspberry.connector import Connector
-from car_message.raspberry.commands import RequestMode, RequestPID, PID_RESPONSE_SIZE, SUCCESS_RESPONSE, \
+from connector import Connector
+from commands import (
+    RequestMode,
+    RequestPID,
+    PID_RESPONSE_SIZE,
+    SUCCESS_RESPONSE,
     PID_RESPONSE_CONVERTER
-from car_message.raspberry.settings import CAR, ENDPOINTS
+)
+from settings import CAR, ENDPOINTS
 
 
 def make_command(request: RequestMode, pid: RequestPID, data: bytearray = None):
