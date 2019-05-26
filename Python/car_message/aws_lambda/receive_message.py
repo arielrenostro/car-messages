@@ -9,6 +9,24 @@ import boto3
 def lambda_handler(event, context):
     body = get_body(event)
 
+    count = 0
+    if isinstance(body, (list, set)):
+        for data in body:
+            put_data(data)
+            count += 1
+    else:
+        put_data(body)
+        count += 1
+
+    return {
+        'statusCode': 200,
+        'body': json.dumps({
+            'count': count
+        })
+    }
+
+
+def put_data(body):
     data = {
         'date': body.get('datetime', datetime.utcnow().strftime("%Y/%m/%dT%H:%M:%SZ")),
         'car': body.get('car'),
@@ -47,13 +65,6 @@ def lambda_handler(event, context):
             }
         }
 
-    return {
-        'statusCode': 200,
-        'body': json.dumps(
-            get_json_data(data)
-        )
-    }
-
 
 def get_body(event):
     if 'body' in event:
@@ -80,26 +91,3 @@ def parse_value_json_data(value):
     if isinstance(value, Decimal):
         return str(value)
     return value
-
-
-def get_json_data(data):
-    new_data = {}
-
-    for key, value in data.items():
-        if isinstance(value, dict):
-            value = get_json_data(value)
-
-        elif isinstance(value, (list, set)):
-            value_list = []
-            for v in value:
-                value_list.append(
-                    parse_value_json_data(v)
-                )
-            value = value_list
-        value = parse_value_json_data(value)
-
-        new_data.update({
-            key: value
-        })
-
-    return new_data

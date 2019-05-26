@@ -20,10 +20,10 @@ PID_RESPONSE_SIZE = {
 }
 
 PID_RESPONSE_CONVERTER = {
-    RequestPID.RPM: (lambda x: ((x[3] * 256) + x[4]) / 4),
-    RequestPID.SPEED: (lambda x: x[3]),
-    RequestPID.COOLANT_TEMPERATURE: (lambda x: x[3] - 40),
-    RequestPID.INTAKE_AIR_TEMPERATURE: (lambda x: x[3] - 40),
+    RequestPID.RPM: (lambda x: ((x[2] * 256) + x[3]) / 4),
+    RequestPID.SPEED: (lambda x: x[2]),
+    RequestPID.COOLANT_TEMPERATURE: (lambda x: x[2] - 40),
+    RequestPID.INTAKE_AIR_TEMPERATURE: (lambda x: x[2] - 40),
 }
 
 SUCCESS_RESPONSE = 0x41

@@ -1,6 +1,6 @@
 import serial as serial
 
-from settings import BLUETOOTH_SERIAL_DEVICE, BLUETOOTH_SERIAL_TIMEOUT
+from settings import BLUETOOTH, CONNECTOR
 
 
 class Connector:
@@ -9,7 +9,11 @@ class Connector:
 
     def __init__(self):
         super().__init__()
-        self._serial = serial.Serial(port=BLUETOOTH_SERIAL_DEVICE, timeout=BLUETOOTH_SERIAL_TIMEOUT)
+        self._serial = serial.Serial(
+            port=BLUETOOTH['DEVICE'],
+            timeout=BLUETOOTH['TIMEOUT'],
+            baudrate=BLUETOOTH['BAUDRATE']
+        )
 
     def connect(self):
         if not self._serial.is_open:
