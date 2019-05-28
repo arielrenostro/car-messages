@@ -57,12 +57,16 @@ def put_data(body):
         table.put_item(
             Item=data
         )
+
+        print(
+            json.dumps(data, default=decimal_encoder)
+        )
     except Exception as e:
         return {
             'statusCode': 500,
-            'body': {
+            'body': json.dumps({
                 'message': str(e)
-            }
+            })
         }
 
 
@@ -91,3 +95,9 @@ def parse_value_json_data(value):
     if isinstance(value, Decimal):
         return str(value)
     return value
+
+
+def decimal_encoder(o):
+    if isinstance(o, Decimal):
+        return float(o)
+    raise TypeError(repr(o) + " is not JSON serializable")
