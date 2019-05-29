@@ -161,7 +161,7 @@ while True:
     intake_temperature = request_command(connector, RequestMode.SHOW_CURRENT_DATA, RequestPID.INTAKE_AIR_TEMPERATURE)
 
     payload = {
-        'datetime': datetime.utcnow().strftime("%Y/%m/%dT%H:%M:%SZ"),
+        'datetime': datetime.utcnow().strftime("%Y/%m/%dT%H:%M:%S.%fZ"),
         'car': CAR,
         'speed': speed,
         'rpm': rpm,

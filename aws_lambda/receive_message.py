@@ -28,7 +28,7 @@ def lambda_handler(event, context):
 
 def put_data(body):
     data = {
-        'date': body.get('datetime', datetime.utcnow().strftime("%Y/%m/%dT%H:%M:%SZ")),
+        'date': body.get('datetime', datetime.utcnow().strftime("%Y/%m/%dT%H:%M:%S.%fZ")),
         'car': body.get('car'),
         'speed': get_decimal(body, 'speed'),
         'rpm': get_decimal(body, 'rpm'),
@@ -89,12 +89,6 @@ def get_decimal(body, key):
             )
         except:
             pass
-
-
-def parse_value_json_data(value):
-    if isinstance(value, Decimal):
-        return str(value)
-    return value
 
 
 def decimal_encoder(o):

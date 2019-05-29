@@ -1,2 +1,2 @@
-PySerial
-requests
+PySerial==3.4
+requests==2.22.0

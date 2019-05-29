@@ -1,3 +1,5 @@
+#!/bin/bash
+
 BLUETOOTH_MAC="00:1D:A5:68:98:8A"
 
 rfcomm release 0
