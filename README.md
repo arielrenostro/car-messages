@@ -47,7 +47,7 @@ Após isso, consumimos os dados em um grafana utilizando uma API REST que lê os
       "target": "coolant_temp",
       "refId": "A",
       "type": "timeserie"
-    
+    }
   ],
   "maxDataPoints": 927,
   "scopedVars": {
