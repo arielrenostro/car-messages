@@ -27,6 +27,13 @@ def lambda_handler(event, context):
 
     connection.close()
 
+    return {
+        'statusCode': 200,
+        'body': json.dumps({
+            'message': 'Message published'
+        })
+    }
+
 
 if __name__ == '__main__':
     lambda_handler(None, None)
