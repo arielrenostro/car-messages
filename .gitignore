@@ -89,6 +89,7 @@ venv/
 ENV/
 env.bak/
 venv.bak/
+aws_lambda/turn_on_card_publish/.env
 
 # Spyder project settings
 .spyderproject
