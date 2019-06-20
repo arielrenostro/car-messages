@@ -1,5 +1,7 @@
 # Gerador de metricas de um computador de bordo
 
+#### Colaboradores: Ariel Adonai Souza, Gabriel Castellani de Oliveira e Gabriel Luís Fernando de Souza.
+
 ## Trabalho de sistemas distribuidos
 
 Nosso trabalho utiliza um raspberry que se comunica com a porta OBD2 do carro e recupera metricas do carro dentre elas, a temperatura da água, rotações por minuto, velocidade e quaisquer outras que a central do carro disponibiliza depois disso, interpreta essas informações e envia para endpoint API Gateway que dispara um `Lambda` que salva essas informações em um `DynamoDB`.
