@@ -1,8 +1,8 @@
 CAR = {
     'PIN': {
-        'FIRST_STAGE_KEY': 11,
-        'SECOND_STAGE_KEY': 12,
-        'HAND_BREAK': 13,
-        'TURNED_ON': 14,
+        'FIRST_STAGE_KEY': 2,
+        'SECOND_STAGE_KEY': 3,
+        'HAND_BREAK': 4,
+        'TURNED_ON': 17,
     }
 }

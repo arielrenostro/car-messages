@@ -1,11 +1,14 @@
-# Gerador de metricas de um computador de bordo
+# Monitor de metricas e controle automotivo
 
 #### Colaboradores: Ariel Adonai Souza, Gabriel Castellani de Oliveira e Gabriel Luís Fernando de Souza.
 
 ## Trabalho de sistemas distribuidos
 
-Nosso trabalho utiliza um raspberry que se comunica com a porta OBD2 do carro e recupera metricas do carro dentre elas, a temperatura da água, rotações por minuto, velocidade e quaisquer outras que a central do carro disponibiliza depois disso, interpreta essas informações e envia para endpoint API Gateway que dispara um `Lambda` que salva essas informações em um `DynamoDB`.
+Nosso trabalho iniciou utilizando um raspberry que se comunica com a porta OBD2 do carro e recupera metricas do carro dentre elas, a temperatura da água, rotações por minuto, velocidade e quaisquer outras que a central do carro disponibiliza. Depois disso, interpreta essas informações e envia para endpoint `API Gateway` que dispara um `Lambda` que salva essas informações em um `DynamoDB`.
 
+A segunda parte do trabalho foi implementar um sistema de mensageria e um software que fica no Raspberry recebendo as mensagens com as ações que ela irá executar. Foi criado um endpoint no `API Gateway` que dispara um `Lambda` que publica uma mensagem no `RabbitMQ`. O Raspberry fica escutando a fila e quando a mensagem chega, a ação é executada.
+
+## Primeira parte
 ### Payload enviado para o DynamoDB:
 ```json
     {
@@ -125,6 +128,11 @@ Endereço: [http://arielrenostro.ddns.net:3000/](http://arielrenostro.ddns.net:3
 Usuário: viewer  
 Senha: viewer 
 
+## Segunda parte
+### Diagrama da AWS
+![imagem-diagrama](https://github.com/arielrenostro/car-messages/blob/master/resources/diagram.jpg)
+
+
 # Stack de desenvolvimento
 
 * [Leitor OBD2 Bluetooth EML327](https://www.elmelectronics.com/wp-content/uploads/2016/07/ELM327DS.pdf)
@@ -138,3 +146,4 @@ Senha: viewer
 * [Python](https://www.python.org/)
 * [Requests](https://2.python-requests.org/en/master/)
 * [Flask](http://flask.pocoo.org/)
+* [RabbitMQ](https://www.rabbitmq.com/)

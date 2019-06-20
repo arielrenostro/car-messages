@@ -1,44 +1,95 @@
 import time
 
-import RPi.GPIO as gpio
+from RPi import GPIO
 
+from mq import send_error_message, send_info_message
 from settings import CAR
 
 
-def turn_car_on():
+def init():
+    print("Setup GPIO")
+    GPIO.setmode(GPIO.BCM)
+
+    GPIO.setup(CAR['PIN']['FIRST_STAGE_KEY'], GPIO.OUT, initial=GPIO.HIGH)
+    GPIO.setup(CAR['PIN']['SECOND_STAGE_KEY'], GPIO.OUT, initial=GPIO.HIGH)
+    GPIO.setup(CAR['PIN']['HAND_BREAK'], GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
+    GPIO.setup(CAR['PIN']['TURNED_ON'], GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
+
+
+def stop():
+    if is_turned_on():
+        turn_off()
+
+    GPIO.cleanup()
+
+
+def is_turned_on():
+    return GPIO.input(CAR['PIN']['TURNED_ON']) == GPIO.HIGH
+
+
+def is_hand_break_pulled():
+    return GPIO.input(CAR['PIN']['HAND_BREAK']) == GPIO.HIGH
+
+
+def turn_on():
     try:
-        gpio.setmode(gpio.BOARD)
+        if not is_hand_break_pulled() or is_turned_on():
+            send_error_message(f'Invalid state to turn on. Hand break [{is_hand_break_pulled()}], Turned ON [{is_turned_on()}]')
+            return
 
-        gpio.setup(CAR['PIN']['FIRST_STAGE_KEY'], gpio.OUT)
-        gpio.setup(CAR['PIN']['SECOND_STAGE_KEY'], gpio.OUT)
-        gpio.setup(CAR['PIN']['HAND_BREAK'], gpio.IN, pull_up_down=gpio.PUD_UP)
-        gpio.setup(CAR['PIN']['TURNED_ON'], gpio.IN, pull_up_down=gpio.PUD_UP)
+        print(f'Turning to the first stage...')
+        set_first_stage_key(True)
+        time.sleep(5)
 
-        hand_break_state = gpio.input(CAR['PIN']['HAND_BREAK'])
-        turned_on_state = gpio.input(CAR['PIN']['TURNED_ON'])
-        if hand_break_state == gpio.HIGH \
-                and turned_on_state == gpio.LOW:
-            gpio.output(CAR['PIN']['FIRST_STAGE_KEY'], gpio.HIGH)
-            time.sleep(5)
+        timeout = 1.2
+        for i in range(3):
+            print(f'Trying to start with {timeout} seconds...')
 
-            timeout = 1
-            for i in range(3):
-                gpio.output(CAR['PIN']['SECOND_STAGE_KEY'], gpio.HIGH)
-                time.sleep(timeout)
-                gpio.output(CAR['PIN']['SECOND_STAGE_KEY'], gpio.LOW)
+            set_second_stage_key(True)
+            time.sleep(timeout)
+            set_second_stage_key(False)
 
-                time.sleep(3)
-                turned_on_state = gpio.input(CAR['PIN']['TURNED_ON'])
-                if turned_on_state != gpio.HIGH:
-                    timeout += 1
-                else:
-                    break
+            time.sleep(3)
+            if not is_turned_on():
+                timeout += 0.3
+            else:
+                send_info_message(f"Car's turned on!")
+                break
 
-            if turned_on_state == gpio.LOW:
-                print(f'Fail to car start after 3 retries')
-        else:
-            print(f'Invalid state to turn on. Hand break [{hand_break_state}], Turned ON [{turned_on_state}]')
+        if not is_turned_on():
+            send_error_message(f'Fail to car start after 3 retries')
+            set_first_stage_key(False)
+
     except Exception as e:
-        print(f'Error on turn_car_on. {e}')
-    finally:
-        gpio.cleanup()
+        send_error_message(f'Error on turn_car_on. {e}')
+        set_first_stage_key(False)
+
+
+def turn_off():
+    if not is_turned_on():
+        send_error_message(f"Car's already turned off")
+        return
+
+    set_first_stage_key(False)
+    set_second_stage_key(False)
+    time.sleep(3)
+
+    if is_turned_on():
+        send_error_message(f"Failed to turn off the car")
+        return
+
+    send_info_message(f"Car's turned off")
+
+
+def set_first_stage_key(bool_value):
+    gpio_level = _get_gpio_level(bool_value)
+    GPIO.output(CAR['PIN']['FIRST_STAGE_KEY'], gpio_level)
+
+
+def set_second_stage_key(bool_value):
+    gpio_level = _get_gpio_level(bool_value)
+    GPIO.output(CAR['PIN']['SECOND_STAGE_KEY'], gpio_level)
+
+
+def _get_gpio_level(bool_value):
+    return GPIO.LOW if bool_value else GPIO.HIGH
